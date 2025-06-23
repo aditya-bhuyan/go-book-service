@@ -2,36 +2,56 @@ name: Go CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main,master ]
   pull_request:
     branches: [ main ]
 
 jobs:
   test:
-    name: Run Unit Tests
+    name: Run Tests with Coverage and HTML Report
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
 
-    - name: Cache Go modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/go/pkg/mod
-          ~/.cache/go-build
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-    - name: Install Dependencies
-      run: go mod tidy
+      - name: Install Dependencies
+        run: go mod tidy
 
-    - name: Run Unit Tests
-      run: go test ./server -v
+      - name: Run Unit Tests with Coverage
+        run: |
+          go test ./server -v -coverprofile=coverage.out -covermode=atomic
+
+      - name: Generate HTML Coverage Report
+        run: |
+          go tool cover -html=coverage.out -o coverage.html
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.out
+          flags: unittests
+          name: go-book-service
+          fail_ci_if_error: true
+
+      - name: Upload HTML Coverage Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.html
