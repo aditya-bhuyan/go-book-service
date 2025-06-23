@@ -8,6 +8,12 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+
+	// Swagger imports
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "go-book-service/docs" // Needed for generated docs
 )
 
 // Config holds server configuration properties such as port number
@@ -34,12 +40,20 @@ func loadConfig(path string) Config {
 }
 
 // main is the entry point of the server application
+// @title           Book Management API
+// @version         1.0
+// @description     This is a sample server for managing books.
+// @host            localhost:8080
+// @BasePath        /
 func main() {
 	// Load configuration from file
 	config := loadConfig("config/config.json")
 
 	// Initialize Gin web framework
 	r := gin.Default()
+
+	// Swagger endpoint
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Register RESTful endpoints
 	r.GET("/books", server.GetBooks)          // List all books
