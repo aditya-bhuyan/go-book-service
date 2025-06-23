@@ -9,14 +9,36 @@ import (
 	"os"
 )
 
+type Config struct {
+	ServerAddress string `json:"server_address"`
+}
+
 type Book struct {
 	ID     string `json:"id"`
 	Title  string `json:"title"`
 	Author string `json:"author"`
 }
 
+func loadConfig(path string) (Config, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return Config{}, err
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	var config Config
+	err = decoder.Decode(&config)
+	return config, err
+}
+
 func main() {
-	baseURL := "http://localhost:8080"
+	config, err := loadConfig("config/config.json")
+	if err != nil {
+		panic(fmt.Sprintf("Failed to load config: %v", err))
+	}
+
+	baseURL := config.ServerAddress
 
 	// Add a book
 	book := Book{ID: "1", Title: "Go in Action", Author: "William Kennedy"}
