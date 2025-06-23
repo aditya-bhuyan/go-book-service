@@ -1,0 +1,11 @@
+# Ignore unnecessary files
+.git
+*.md
+*.log
+*.zip
+*.sh
+vendor
+coverage.*
+.DS_Store
+docs/swagger.yaml
+docs/docs.go

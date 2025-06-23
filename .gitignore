@@ -1,0 +1,56 @@
+# Binaries
+/app
+*.exe
+*.out
+*.test
+
+# Build output
+bin/
+build/
+
+# Go modules
+vendor/
+
+# Dependency cache
+go.sum
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Coverage files
+coverage.*
+*.cov
+*.coverprofile
+*.cover.html
+
+# Swagger generated files (docs package)
+docs/docs.go
+docs/swagger.yaml
+docs/swagger.json
+
+# GitHub Pages (optional to ignore locally)
+docs/*.html
+docs/*.js
+docs/*.css
+docs/favicon*.*
+docs/index.html
+
+# Docker
+*.tar
+*.dockerfile
+
+# Archives
+*.zip
+*.tar.gz
+
+# Test output
+testdata/
+*.tmp
