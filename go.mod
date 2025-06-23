@@ -1,4 +1,4 @@
-module go-book-service
+module github.com/aditya-bhuyan/go-book-service
 
 go 1.23.4
 

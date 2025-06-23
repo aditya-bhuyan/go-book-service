@@ -3,10 +3,11 @@ package server
 import (
 	"bytes"
 	"encoding/json"
-	"go-book-service/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/aditya-bhuyan/go-book-service/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

@@ -1,30 +1,39 @@
-# Stage 1: Build
-FROM golang:1.22 AS builder
+# Stage 1: Build the Go binary
+FROM golang:1.23.4 AS builder
 
-WORKDIR /app
+WORKDIR /go-book-service
 
-# Copy go files and download dependencies
+# Enable Go modules explicitly
+ENV GO111MODULE=on
+
+# Copy dependency files
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source
+# Install swag CLI to generate Swagger docs
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+# Copy source code
 COPY . .
 
-# Build the Go binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o app main.go
+# Generate Swagger documentation
+RUN /go/bin/swag init
 
-# Stage 2: Run
+# Build the binary from module path
+RUN CGO_ENABLED=0 GOOS=linux go build -o app ./main.go
+
+# Stage 2: Minimal runtime image
 FROM alpine:latest
 
 WORKDIR /app
 
-# Copy binary and config
+# Copy the app binary and runtime resources
 COPY --from=builder /app/app .
-COPY config ./config
-COPY docs ./docs
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/docs ./docs
 
-# Expose the app port
+# Expose service port
 EXPOSE 8080
 
-# Run the app
+# Run the binary
 CMD ["./app"]

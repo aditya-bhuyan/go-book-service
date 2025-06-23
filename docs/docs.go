@@ -118,6 +118,11 @@ const docTemplate = `{
     "definitions": {
         "model.Book": {
             "type": "object",
+            "required": [
+                "author",
+                "id",
+                "title"
+            ],
             "properties": {
                 "author": {
                     "type": "string"

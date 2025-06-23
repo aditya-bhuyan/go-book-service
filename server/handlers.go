@@ -1,8 +1,9 @@
 package server
 
 import (
-	"go-book-service/model"
 	"net/http"
+
+	"github.com/aditya-bhuyan/go-book-service/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

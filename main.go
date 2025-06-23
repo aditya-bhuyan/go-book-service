@@ -13,7 +13,9 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "go-book-service/docs" // Needed for generated docs
+	_ "github.com/aditya-bhuyan/go-book-service/docs"
+	_ "github.com/aditya-bhuyan/go-book-service/server" // Import server package for route registration
+	// Needed for generated docs
 )
 
 // Config holds server configuration properties such as port number
