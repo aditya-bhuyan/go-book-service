@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
-// books is an in-memory store for book data
+// In-memory store
 var books = make(map[string]model.Book)
+var validate = validator.New()
 
-// GetBooks handles GET /books
-// Returns a list of all books in the in-memory store
 // GetBooks godoc
 // @Summary      Get all books
 // @Description  Retrieves all books from in-memory storage
@@ -27,8 +27,6 @@ func GetBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, values)
 }
 
-// AddBook handles POST /books
-// Adds a new book to the in-memory store from the request JSON
 // AddBook godoc
 // @Summary      Add a new book
 // @Description  Adds a book to the in-memory store
@@ -45,12 +43,17 @@ func AddBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Validate struct
+	if err := validate.Struct(book); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	books[book.ID] = book
 	c.JSON(http.StatusOK, gin.H{"status": "Book added"})
 }
 
-// DeleteBook handles DELETE /books/:id
-// Removes the book with the given ID from the in-memory store
 // DeleteBook godoc
 // @Summary      Delete a book
 // @Description  Deletes a book by ID from in-memory store

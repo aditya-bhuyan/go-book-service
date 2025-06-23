@@ -1,0 +1,21 @@
+# Initial Commands
+
+go mod init go-book-service
+go get github.com/gin-gonic/gin
+
+
+# Swagger Commands
+
+go install github.com/swaggo/swag/cmd/swag@latest
+go get -u github.com/swaggo/gin-swagger
+go get -u github.com/swaggo/files
+
+swag init [To generate documentation]
+
+
+# Adding Validations and Unit Test Cases
+
+go get github.com/go-playground/validator/v10
+go get github.com/stretchr/testify/assert
+
+go test ./server -v [To test the application with server running]
